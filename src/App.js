@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
-import { getUser } from './graphql/queries'
-import { registerUser } from './graphql/mutations'
+import { getUser } from "./graphql/queries";
+import { registerUser } from "./graphql/mutations";
 import { Authenticator, AmplifyTheme } from "aws-amplify-react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Auth, Hub } from "aws-amplify";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-
-
+import Profile from "./components/Profile";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 export const UserContext = React.createContext();
 
 const muiTheme = createMuiTheme({
   palette: {
-    primary: {main: "#00bcd4"},
-    secondary: {main: "#ffc400"},
+    primary: { main: "#00bcd4" },
+    secondary: { main: "#ffc400" }
   },
   shadows: new Array(25)
   // status: {
@@ -43,8 +42,8 @@ function App() {
       case "signIn":
         console.log("signed in");
         getUserData();
-        console.log(payload.data)
-        registerNewUser(payload.data)
+        console.log(payload.data);
+        registerNewUser(payload.data);
         break;
       case "signUp":
         console.log("signed up");
@@ -63,28 +62,30 @@ function App() {
     getUserData();
   }, []);
 
-  const registerNewUser = async (signInData) => {
+  const registerNewUser = async signInData => {
     const getUserInput = {
       id: signInData.signInUserSession.idToken.payload.sub
-    }
-    const { data } = await API.graphql(graphqlOperation(getUser, getUserInput))
-    console.log("getUser data:", data)
-    if(!data.getUser){
-      try{
+    };
+    const { data } = await API.graphql(graphqlOperation(getUser, getUserInput));
+    console.log("getUser data:", data);
+    if (!data.getUser) {
+      try {
         const registerUserInput = {
           ...getUserInput,
           username: signInData.username,
           email: signInData.signInUserSession.idToken.payload.email,
           registered: true
-        }
-        console.log('new user input:', registerUserInput)
-        const newUser = await API.graphql(graphqlOperation(registerUser, { input: registerUserInput }))
-        console.log(newUser)
-      }catch(err){
-        console.error("Error registering new user",err)
+        };
+        console.log("new user input:", registerUserInput);
+        const newUser = await API.graphql(
+          graphqlOperation(registerUser, { input: registerUserInput })
+        );
+        console.log(newUser);
+      } catch (err) {
+        console.error("Error registering new user", err);
       }
     }
-  }
+  };
 
   const getUserData = async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -103,13 +104,17 @@ function App() {
     <Authenticator theme={theme} />
   ) : (
     <UserContext.Provider value={{ user }}>
-     <ThemeProvider theme={muiTheme}>
-      <Router>
-        <Navbar user={user} handleSignOut={handleSignOut} />
+      <ThemeProvider theme={muiTheme}>
+        <Router>
+          <Navbar user={user} handleSignOut={handleSignOut} />
           <div className="container">
             <Switch>
-
               <Route exact path="/" component={HomePage} />
+              <Route
+                exact
+                path="/profile"
+                render={props => <Profile {...props} user={user} />}
+              />
               {/* <Route
                 path="/markets/:marketId"
                 component={({ match }) => (
@@ -118,8 +123,8 @@ function App() {
               /> */}
             </Switch>
           </div>
-      </Router>
-     </ThemeProvider>
+        </Router>
+      </ThemeProvider>
     </UserContext.Provider>
   );
 }
