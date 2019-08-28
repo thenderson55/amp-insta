@@ -1,0 +1,63 @@
+type User
+  @model(
+    queries: { get: "getUser" }
+    mutations: { create: "registerUser", update: "updateUser" }
+  )
+  @searchable {
+  id: ID!
+  username: String!
+  email: String!
+  registered: Boolean
+  bio: String
+  friends: [User]
+  messages: [Message] @connection(name: "UserMessages", sortField: "createdAt")
+  comments: [Comment]
+  tags: [String]
+  avatar: S3Object
+  photos: [S3Object]
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type Message
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        identityField: "sub"
+        operations: [create, update, delete]
+      }
+    ]
+  ) {
+  id: ID
+  user: User! @connection(name: "UserMessages", sortField: "createdAt")
+  content: String!
+  likes: Int
+  comments: [Comment]
+    @connection(name: "MessageComments", sortField: "createdAt")
+  createdAt: String
+}
+
+type Comment
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        identityField: "sub"
+        operations: [create, update, delete]
+      }
+    ]
+  ) {
+  owner: String!
+  id: ID
+  content: String!
+  message: Message @connection(name: "MessageComments", sortField: "createdAt")
+  likes: Int
+  createdAt: String
+}
