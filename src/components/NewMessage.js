@@ -27,8 +27,8 @@ const styles = {
     paddingLeft: 30,
   },
   input: {
-    height: "80%",
-    width: "80%",
+    height: "90%",
+    maxWidth: "90%",
     margin: 10,
     borderRadius: "1%"
   }
@@ -65,7 +65,7 @@ const NewMessage = ({ classes }) =>  {
         <>
         <Card className={classes.card}>
           {/* <CardMedia image="https://source.unsplash.com/random" title="avatar" className={classes.image}></CardMedia> */}
-          {/* <CardContent className={classes.content}> */}
+          {/* <CardContent> */}
             <TextField
               className={classes.input}
               id="outlined-full-width"
@@ -82,10 +82,10 @@ const NewMessage = ({ classes }) =>  {
               }}
             />
             {/* <textarea className={classes.input} name="" id="" cols="30" rows="10"></textarea> */}
-            <Button onClick={() => handleNewMessage(user)}>
+          {/* </CardContent> */}
+            <Button style={{paddingRight: "10px"}} onClick={() => handleNewMessage(user)}>
               Post!
             </Button>
-          {/* </CardContent> */}
         </Card>
         </>
       )}

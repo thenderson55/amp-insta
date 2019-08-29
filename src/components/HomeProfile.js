@@ -5,13 +5,18 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Link from "react-router-dom/Link"
 import MuiLink from "@material-ui/core/Link"
+import dayjs from 'dayjs'
+import LocationOn from '@material-ui/icons/LocationOn'
+import LinkIcon from '@material-ui/icons/Link'
+import CalendarToday from '@material-ui/icons/CalendarToday'
+import { textAlign } from '@material-ui/system';
 
 const styles = { 
   profile: {
-    height: "40%",
+    height: "36.5%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    // alignItems: "center"
 
   },
   card: {
@@ -19,13 +24,30 @@ const styles = {
     marginBottom: 20,
     height: "20%"
   },
+  imageWrapper: {
+    textAlign: "center",
+
+  },
   image: {
-    marginTop: 20,
-    height: 90,
-    width: 90,
+    margin: 20,
+    height: 120,
+    width: 120,
     borderRadius: "50%",
-    objectFit: "cover"
+    objectFit: "cover",
+    dipaly: "inline-block",
   }, 
+  profileDetails: {
+    paddingLeft: 20,
+  },
+  textInfo:{
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
+    '& span' : {
+      marginLeft: 10,
+    }
+  },
+
 }
 
 const HomeProfile = ({ classes }) => {
@@ -33,14 +55,25 @@ const HomeProfile = ({ classes }) => {
     <UserContext.Consumer>
       {({user}) => (
         <Paper className={classes.profile}>
-          <div>
-            <div >
-              <img className={classes.image} src="https://source.unsplash.com/random" alt="profile avatar"/>
-            </div>
+          <div className={classes.imageWrapper} >
+            <img className={classes.image} src="https://source.unsplash.com/random" alt="profile avatar"/>
           </div>
-          <hr/>
-          <div className="profile-details">
+          <div style={{textAlign: "center"}}>
             <MuiLink component={Link} to={"/profile"} color="primary" variant="h5">{user.username}</MuiLink>
+          </div>
+          <div className={classes.profileDetails}>
+            {/* {user.tags && <Typography>Bio</Typography> } */}
+            <Typography className={classes.textInfo}>
+              <LocationOn color="primary"/><span>Tokyo</span>
+            </Typography>
+            <Typography className={classes.textInfo}>
+              
+            </Typography>
+            <Typography className={classes.textInfo}>
+              <CalendarToday color="primary"/>{' '}
+              <span>Joined {dayjs(user.createdAt).format('MM YYYY')}</span>
+            </Typography>
+            <br/>
           </div>
         </Paper>
       )}  
