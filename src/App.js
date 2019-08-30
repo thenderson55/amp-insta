@@ -6,11 +6,15 @@ import { Authenticator, AmplifyTheme } from "aws-amplify-react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Auth, Hub } from "aws-amplify";
 import "./App.css";
+import { StateProvider } from "./context/store";
+import { initialState, reducer } from "./context/reducer";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+// import { useStateValue } from './context/store'
+
 
 export const UserContext = React.createContext();
 
@@ -27,6 +31,7 @@ const muiTheme = createMuiTheme({
 
 function App() {
   const [user, setUser] = useState(null);
+  const [avatar, setAvatar] = useState(null);
 
   Hub.listen("auth", data => {
     const { payload } = data;
@@ -60,6 +65,7 @@ function App() {
 
   useEffect(() => {
     getUserData();
+    // getUserProfile();
   }, []);
 
   const registerNewUser = async signInData => {
@@ -89,7 +95,17 @@ function App() {
 
   const getUserData = async () => {
     const user = await Auth.currentAuthenticatedUser();
+    console.log(user);
     user ? setUser(user) : setUser(null);
+    const currentUserProfile = await API.graphql(
+      graphqlOperation(getUser, {
+        id: user.attributes.sub
+      })
+    )
+    const profile = currentUserProfile.data.getUser
+    profile ? setAvatar(profile.avatar.key) : setAvatar(null);
+
+    console.log('', currentUserProfile.data.getUser.avatar.key)
   };
 
   const handleSignOut = async () => {
@@ -103,29 +119,44 @@ function App() {
   return !user ? (
     <Authenticator theme={theme} />
   ) : (
-    <UserContext.Provider value={{ user }}>
-      <ThemeProvider theme={muiTheme}>
-        <Router>
-          <Navbar user={user} handleSignOut={handleSignOut} />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route
-                exact
-                path="/profile"
-                render={props => <Profile {...props} user={user} />}
-              />
-              {/* <Route
-                path="/markets/:marketId"
-                component={({ match }) => (
-                  <MarketPageB marketId={match.params.marketId} user={user} />
-                )}
-              /> */}
-            </Switch>
-          </div>
-        </Router>
-      </ThemeProvider>
-    </UserContext.Provider>
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <UserContext.Provider value={{ user, avatar }}>
+      {/* <UserContext.Provider value={{ profile }}> */}
+        <ThemeProvider theme={muiTheme}>
+          <Router>
+            <Navbar user={user} handleSignOut={handleSignOut} />
+            <div className="container">
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  // component={HomePage}
+                  render={props => <HomePage {...props} user={user} avatar={avatar} />}
+                />
+                <Route
+                  exact
+                  path="/profile/:id"
+                  render={props => (
+                    <Profile
+                      {...props}
+                      // user={user}
+                      id={props.match.params.id}
+                    />
+                  )}
+                />
+                {/* <Route
+                  path="/markets/:marketId"
+                  component={({ match }) => (
+                    <MarketPageB marketId={match.params.marketId} user={user} />
+                  )}
+                /> */}
+              </Switch>
+            </div>
+          </Router>
+        </ThemeProvider>
+      </UserContext.Provider>
+      {/* </UserContext.Provider> */}
+    </StateProvider>
   );
 }
 

@@ -30,7 +30,6 @@ const styles = {
     height: "90%",
     maxWidth: "90%",
     margin: 10,
-    borderRadius: "1%"
   }
 }
 

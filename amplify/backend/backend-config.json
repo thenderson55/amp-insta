@@ -14,5 +14,11 @@
 				"securityType": "AMAZON_COGNITO_USER_POOLS"
 			}
 		}
+	},
+	"storage": {
+		"s3d9035897": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }
