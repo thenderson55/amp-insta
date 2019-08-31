@@ -111,7 +111,7 @@ function App() {
       graphqlOperation(getUser, {
         id: user.attributes.sub
       })
-      )
+    )
     const profile = currentUserProfile.data.getUser
     let key = ""
     if(profile.avatar == null){
@@ -163,7 +163,8 @@ function App() {
                   render={props => (
                     <GalleryPage
                       {...props}
-                      // user={user}
+                      user={user}
+
                       id={props.match.params.id}
                     />
                   )}

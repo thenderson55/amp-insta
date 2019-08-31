@@ -1,12 +1,86 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState} from "react";
+import { PhotoPicker, S3Image } from "aws-amplify-react";
+import { Storage, Auth, API, graphqlOperation } from "aws-amplify";
+import awsmobile from "../aws-exports";
+import { useSelector, useDispatch } from "react-redux";
+import { getUser } from '../graphql/queries'
+import { updateUser } from '../graphql/mutations'
+import Gallery from '../components/Gallery'
+
+
+import Button from '@material-ui/core/Button';
+
 
 export default function GalleryPage({ id }) {
-  const user = useSelector(state => state.user)
-  console.log('user gallery:', user)
+
+  const [image, setImage] = useState() 
+  const [isUploading, setIsUploading] = useState(false)
+
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch()
+
+  const handleAvatarUpload = async () => {
+    setIsUploading(true)
+    const visibility = "public"
+    console.log(user.attributes.sub)
+    const { identityId } = await Auth.currentCredentials()
+    const filename = `/${visibility}/${identityId}/${Date.now()}-${image.name}`
+    const uploadedFile = await Storage.put(filename, image.file, {
+      contentType: image.type
+    })
+    console.log('file', uploadedFile)
+    const file = {
+      key: uploadedFile.key,
+      bucket: awsmobile.aws_user_files_s3_bucket,
+      region: awsmobile.aws_user_files_s3_bucket_region
+    }
+    // dispatch ({ type: "SET_AVATAR", payload: uploadedFile.key })
+    const currentUserInfo = await API.graphql(
+      graphqlOperation(getUser, {
+        id: user.attributes.sub
+      })
+    );
+    // AWS didn't add friends, messages, comments to mutations for some reason
+    // Possible because they are not scalar types?
+    delete currentUserInfo.data.getUser.friends
+    delete currentUserInfo.data.getUser.messages
+    delete currentUserInfo.data.getUser.comments
+    console.log('l', currentUserInfo.data.getUser)
+    let photos = []
+    
+    if(currentUserInfo.data.getUser.photos == null){
+      photos.push(file)
+      
+    }else {
+      photos = currentUserInfo.data.getUser.photos
+      photos.unshift(file)
+    }
+    // const photos = currentUserInfo.data.getUser.photos
+    console.log('pics', photos)
+    const input = {
+      ...currentUserInfo.data.getUser,
+      photos
+    }
+    console.log('kk', input)
+    const updatedUser = await API.graphql(graphqlOperation(updateUser, {input}))
+    console.log('ff', updatedUser.data.updateUser)
+    setIsUploading(false)
+
+  }
+
+  console.log("user gallery:", user);
   return (
     <div>
-      Gallery {id}
+      <PhotoPicker
+        // theme={theme}
+        preview
+        onPick={file => setImage(file)}
+      ></PhotoPicker>
+      <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
+        Uplaod Image
+      </Button>
+        Gallery {id}
+      <Gallery id={id}></Gallery>
     </div>
-  )
+  );
 }
