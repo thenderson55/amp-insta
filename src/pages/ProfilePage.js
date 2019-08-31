@@ -29,7 +29,7 @@ const styles = {
 }
 
 
-const Profile = ({ id }) => {
+const ProfilePage = ({ id }) => {
   const [image, setImage] = useState()
   const [isUploading, setIsUploading] = useState(false)
 
@@ -135,4 +135,4 @@ const theme = {
   // }
 }
 
-export default withStyles(styles)(Profile)
+export default withStyles(styles)(ProfilePage)

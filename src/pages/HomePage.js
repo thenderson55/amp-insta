@@ -14,6 +14,7 @@ export default function HomePage({ user }) {
         <HomeProfile 
         user={user}
         />
+        <Link to={`/gallery/${user.attributes.sub}`}>Gallery</Link>
       </Grid>
       <Grid item sm={8} xs={12}>
         <NewMessage></NewMessage>

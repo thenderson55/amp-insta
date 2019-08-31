@@ -10,7 +10,8 @@ import { StateProvider } from "./context/store";
 import { initialState, reducer } from "./context/reducer";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
-import Profile from "./components/Profile";
+import ProfilePage from "./pages/ProfilePage"
+import GalleryPage from "./pages/GalleryPage"
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
@@ -149,7 +150,18 @@ function App() {
                   exact
                   path="/profile/:id"
                   render={props => (
-                    <Profile
+                    <ProfilePage
+                      {...props}
+                      // user={user}
+                      id={props.match.params.id}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/gallery/:id"
+                  render={props => (
+                    <GalleryPage
                       {...props}
                       // user={user}
                       id={props.match.params.id}
