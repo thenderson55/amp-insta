@@ -6,9 +6,9 @@ import { PhotoPicker } from 'aws-amplify-react'
 import { getUser } from '../graphql/queries'
 import { updateUser } from '../graphql/mutations'
 import awsmobile from '../aws-exports'
-import { useStateValue } from '../context/store'
-import { connect } from 'react-redux'
-import { updateMessage } from '../store/actions'
+
+import { updateMessage, allMessages, setProfileData } from '../store/actions'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { UserContext } from "../App";
 
@@ -29,18 +29,23 @@ const styles = {
 }
 
 
-const Profile = ({ id, message, updateMessage }) => {
+const Profile = ({ id }) => {
   const [image, setImage] = useState()
   const [isUploading, setIsUploading] = useState(false)
-  const [{ avatar }, dispatch] = useStateValue()
+
+  const message = useSelector(state => state.msg)
+  const state = useSelector(state => state)
+
   console.log("msg", message)
+  console.log("msg", state)
+
+  const dispatch = useDispatch()
 
   const handleAvatarUpload = async (user) => {
     setIsUploading(true)
     const visibility = "public"
     console.log(user.attributes.sub)
     const { identityId } = await Auth.currentCredentials()
-    // console.log('a', a)
     const filename = `/${visibility}/${identityId}/${Date.now()}-${image.name}`
     const uploadedFile = await Storage.put(filename, image.file, {
       contentType: image.type
@@ -51,11 +56,7 @@ const Profile = ({ id, message, updateMessage }) => {
       bucket: awsmobile.aws_user_files_s3_bucket,
       region: awsmobile.aws_user_files_s3_bucket_region
     }
-    // dispatch({
-    //   type:  "UPDATE_AVATAR",
-    //   payload: file
-    // })
-    console.log('id', identityId)
+    dispatch ({ type: "SET_AVATAR", payload: uploadedFile.key })
     const currentUserInfo = await API.graphql(
       graphqlOperation(getUser, {
         id: user.attributes.sub
@@ -74,6 +75,8 @@ const Profile = ({ id, message, updateMessage }) => {
     console.log('kk', input)
     const updatedUser = await API.graphql(graphqlOperation(updateUser, {input}))
     console.log('ff', updatedUser.data.updateUser)
+    setIsUploading(false)
+
   }
 
   const handleUpdateMsg = () => {
@@ -132,16 +135,4 @@ const theme = {
   // }
 }
 
-const mapStateToProps = state => {
-  return {
-    message: state.msg
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    updateMessage: message => dispatch(updateMessage(message))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile))
+export default withStyles(styles)(Profile)

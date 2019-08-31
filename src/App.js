@@ -13,10 +13,14 @@ import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-// import { useStateValue } from './context/store'
+
+// Redux
+import { useSelector, useDispatch } from 'react-redux'
+
 
 
 export const UserContext = React.createContext();
+
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -31,7 +35,8 @@ const muiTheme = createMuiTheme({
 
 function App() {
   const [user, setUser] = useState(null);
-  const [avatar, setAvatar] = useState(null);
+  const avatar = useSelector(state => state.avatar)
+  const dispatch = useDispatch()
 
   Hub.listen("auth", data => {
     const { payload } = data;
@@ -46,17 +51,20 @@ function App() {
     switch (payload.event) {
       case "signIn":
         console.log("signed in");
+        // setUserInfo()
         getUserData();
         console.log(payload.data);
         registerNewUser(payload.data);
         break;
       case "signUp":
         console.log("signed up");
+        // setUserInfo()
         getUserData();
         break;
       case "signOut":
         console.log("signed out");
         setUser(null);
+        // user = null
         break;
       default:
         break;
@@ -65,7 +73,7 @@ function App() {
 
   useEffect(() => {
     getUserData();
-    // getUserProfile();
+
   }, []);
 
   const registerNewUser = async signInData => {
@@ -97,15 +105,20 @@ function App() {
     const user = await Auth.currentAuthenticatedUser();
     console.log(user);
     user ? setUser(user) : setUser(null);
+    dispatch({ type: "SET_NEW_USER", payload: user })
     const currentUserProfile = await API.graphql(
       graphqlOperation(getUser, {
         id: user.attributes.sub
       })
-    )
+      )
     const profile = currentUserProfile.data.getUser
-    profile ? setAvatar(profile.avatar.key) : setAvatar(null);
-
-    console.log('', currentUserProfile.data.getUser.avatar.key)
+    let key = ""
+    if(profile.avatar == null){
+      key = profile.avatar
+    }else {
+      key = profile.avatar.key
+    }
+    dispatch({ type: "SET_AVATAR", payload:key })
   };
 
   const handleSignOut = async () => {
@@ -120,8 +133,7 @@ function App() {
     <Authenticator theme={theme} />
   ) : (
     <StateProvider initialState={initialState} reducer={reducer}>
-      <UserContext.Provider value={{ user, avatar }}>
-      {/* <UserContext.Provider value={{ profile }}> */}
+      <UserContext.Provider value={{ user }}>
         <ThemeProvider theme={muiTheme}>
           <Router>
             <Navbar user={user} handleSignOut={handleSignOut} />
@@ -130,8 +142,8 @@ function App() {
                 <Route
                   exact
                   path="/"
-                  // component={HomePage}
-                  render={props => <HomePage {...props} user={user} avatar={avatar} />}
+                  render={props => <HomePage {...props} user={user} 
+                   />}
                 />
                 <Route
                   exact
