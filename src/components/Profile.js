@@ -7,6 +7,8 @@ import { getUser } from '../graphql/queries'
 import { updateUser } from '../graphql/mutations'
 import awsmobile from '../aws-exports'
 import { useStateValue } from '../context/store'
+import { connect } from 'react-redux'
+import { updateMessage } from '../store/actions'
 
 import { UserContext } from "../App";
 
@@ -27,10 +29,11 @@ const styles = {
 }
 
 
-const Profile = ({ id }) => {
+const Profile = ({ id, message, updateMessage }) => {
   const [image, setImage] = useState()
   const [isUploading, setIsUploading] = useState(false)
   const [{ avatar }, dispatch] = useStateValue()
+  console.log("msg", message)
 
   const handleAvatarUpload = async (user) => {
     setIsUploading(true)
@@ -73,6 +76,10 @@ const Profile = ({ id }) => {
     console.log('ff', updatedUser.data.updateUser)
   }
 
+  const handleUpdateMsg = () => {
+    updateMessage("Updated!")
+  }
+
   return (
     <UserContext.Consumer>
       {({ user }) => (
@@ -85,6 +92,7 @@ const Profile = ({ id }) => {
         <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>Add avatar</Button>
         <div>{id}</div>
         <div>{user.attributes.sub}</div>
+        <button onClick={handleUpdateMsg}></button>
       </>
       )}
 
@@ -124,4 +132,16 @@ const theme = {
   // }
 }
 
-export default withStyles(styles)(Profile)
+const mapStateToProps = state => {
+  return {
+    message: state.msg
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateMessage: message => dispatch(updateMessage(message))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile))

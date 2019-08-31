@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { UserContext } from "../App";
 import { S3Image } from "aws-amplify-react";
+import { connect } from 'react-redux'
+
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -9,6 +11,7 @@ import MuiLink from "@material-ui/core/Link";
 import dayjs from "dayjs";
 import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
+
 
 const styles = {
   profile: {
@@ -44,7 +47,7 @@ const styles = {
   }
 };
 
-const HomeProfile = ({ classes }) => {
+const HomeProfile = ({ classes, message }) => {
   return (
     <UserContext.Consumer>
       {({ user, avatar }) => 
@@ -74,6 +77,7 @@ const HomeProfile = ({ classes }) => {
             >
               {user.username}
               {user.email}
+              {message}
             </MuiLink>
           </div>
           <div className={classes.profileDetails}>
@@ -95,4 +99,10 @@ const HomeProfile = ({ classes }) => {
   );
 };
 
-export default withStyles(styles)(HomeProfile);
+const mapStateToProps = state => {
+  return {
+    message: state.msg
+  }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(HomeProfile));
