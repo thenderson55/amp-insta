@@ -24,10 +24,12 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     overflow: 'hidden',
+    borderRadius: "2%",
+
     backgroundColor: theme.palette.background.paper,
-    paddingBottom: 20
+    // paddingBottom: 20
   },
   gridList: {
     width: 500,

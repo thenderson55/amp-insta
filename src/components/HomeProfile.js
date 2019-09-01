@@ -51,6 +51,7 @@ const styles = {
 
 const HomeProfile = ({ classes }) => {
   const avatar = useSelector(state => state.avatar)
+  const profile = useSelector(state => state.profile)
 
   return (
     <UserContext.Consumer>
@@ -87,7 +88,7 @@ const HomeProfile = ({ classes }) => {
             {/* {user.tags && <Typography>Bio</Typography> } */}
             <Typography className={classes.textInfo}>
               <LocationOn color="primary" />
-              <span>Tokyo</span>
+              <span>{profile.bio}</span>
             </Typography>
             <Typography className={classes.textInfo}></Typography>
             <Typography className={classes.textInfo}>

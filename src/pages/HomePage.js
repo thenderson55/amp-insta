@@ -20,13 +20,27 @@ const imgTheme = {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
+    display: "grid", /* 1 */
+    gridTemplateColumns: "repeat(4, 45px)", /* 2 */
+    // gridTemplateRows: "repeat(auto-fill, 45px)", /* 2 */
+    gridGap: "0.5rem", /* 3 */
+    // justifyContent: "space-around", /* 4 */
+    // display: 'flex',
+    // flexWrap: 'wrap',
+    // // justifyContent: 'center',
+    // overflow: 'hidden',
+    // borderRadius: "2%",
+
     backgroundColor: theme.palette.background.paper,
-    // paddingBottom: 20
+    // // // paddingBottom: 20
+    // '&::after': {
+    //   content: "",
+    //   flex: "auto",
+    // },
+    // '&:hover': {
+    //   backgroundColor: '#99f',
   },
+  
   gridList: {
     // width: 500,
     // height: 450,
@@ -44,6 +58,7 @@ export default function HomePage({ user }) {
           user={user}
           />
         </div>
+
         <Link to={`/gallery/${user.attributes.sub}`}>
           <Gallery id={user.attributes.sub} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
         </Link>

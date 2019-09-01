@@ -38,14 +38,16 @@ export default function Gallery({ id, useStyles, imgTheme }) {
           return <CircularProgress fullscreen={true} />;
         return (
           <>
+          <div style={{textAlign: "center"}}>
           <div className={classes.root}>
-            <GridList   cols={4}>
+            {/* <GridList   cols={4}> */}
             {data.getUser.photos &&
               data.getUser.photos.map(photo => (
                 // <div className={classes.imageWrapper}>
                 // <GridListTile key={photo.key} >
                   // {/* <img src={tile.img} alt={tile.title} /> */}
                   <>
+
                     <S3Image
                       theme={imgTheme}
                       imgKey={photo.key}
@@ -54,7 +56,8 @@ export default function Gallery({ id, useStyles, imgTheme }) {
                   </>
                 // {/* </GridListTile>  */}
               ))}
-            </GridList>
+            {/* </GridList> */}
+          </div>
           </div>
           </>
         );
