@@ -68,6 +68,60 @@ export default function GalleryPage({ id }) {
 
   }
 
+  const onChange = e => {
+    const files = Array.from(e.target.files)
+    console.log(files)
+      // var reader = new FileReader();
+    
+      // reader.onload = function(e) {
+      //     reader.readAsDataURL(file);
+      // }
+    
+    // const fileName = e.target.files[0].name;
+    // const reader = new FileReader();
+    // reader.readAsDataURL(e.target.files[0]);
+    // reader.onload = event => {
+    //     const img = new Image();
+    //     img.src = event.target.result;
+    //     img.onload = () => {
+    //             // console.log(img)
+    //             const elem = document.createElement('canvas');
+    //             elem.width = width;
+    //             elem.height = height;
+    //             const ctx = elem.getContext('2d');
+    //             // img.width and img.height will contain the original dimensions
+    //             ctx.drawImage(img, 0, 0, width, height);
+    //             ctx.canvas.toBlob((blob) => {
+    //                 const file = new File([blob], fileName, {
+    //                     type: 'image/jpeg',
+    //                     lastModified: Date.now()
+    //                 });
+    //             }, 'image/jpeg', 1);
+    //         },
+    //         reader.onerror = error => console.log(error);
+    };
+  
+    // this.setState({ uploading: true })
+
+    // const formData = new FormData()
+
+    // files.forEach((file, i) => {
+    //   formData.append(i, file)
+    // })
+
+    // fetch(`${API_URL}/image-upload`, {
+    //   method: 'POST',
+    //   body: formData
+    // })
+    // .then(res => res.json())
+    // .then(images => {
+    //   this.setState({ 
+    //     uploading: false,
+    //     images
+    //   })
+    // })
+  
+
   console.log("user gallery:", user);
   return (
     <div>
@@ -81,6 +135,8 @@ export default function GalleryPage({ id }) {
       </Button>
         Gallery {id}
       <Gallery id={id}></Gallery>
+      {/* <input type='file' id='single' onChange={onChange} />  */}
+
     </div>
   );
 }

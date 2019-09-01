@@ -10,47 +10,35 @@ import { useSelector, useDispatch } from "react-redux";
 
 export default function Gallery({ id }) {
  
-  const onNewMessage = (prevQuery, newData) => {
+  const onNewPhoto = (prevQuery, newData) => {
     let updatedQuery = { ...prevQuery };
-    console.log('subs', newData.onUpdateUser)
-    console.log('subs', newData.onUpdateUser)
     const updatedPhotoList = [
-      newData.onUpdateUser.photos,
+      newData.onUpdateUser.photos[0],
       ...prevQuery.getUser.photos
     ];
-    updatedQuery.onUpdateUser.photos = updatedPhotoList;
+    updatedQuery.getUser.photos = updatedPhotoList;
     return updatedQuery;
   };
 
-  // const onNewMessage = (prevQuery, newData) => {
-  //   let updatedQuery = { ...prevQuery };
-  //   const updatedMessageList = [
-  //     newData.onCreateMessage,
-  //     ...prevQuery.listMessages.items
-  //   ];
-  //   updatedQuery.listMessages.items = updatedMessageList;
-  //   return updatedQuery;
-  // };
 
   return (
     <Connect
       query={graphqlOperation(getUser, {
         id
       })}
-      // subscription={graphqlOperation(onUpdateUser)}
-      // onSubscriptionMsg={onNewPhoto}
+      subscription={graphqlOperation(onUpdateUser)}
+      onSubscriptionMsg={onNewPhoto}
     >
       {({ data, loading, errors }) => {
-        console.log('data', data)
         if (errors.length > 0) return console.log(errors);
         if (loading || !data.getUser)
           return <CircularProgress fullscreen={true} />;
-        console.log(data.getUser.photos);
         return (
           <>
             {data.getUser.photos &&
               data.getUser.photos.map(photo => (
                 // <div className={classes.imageWrapper}>
+                <>
                   <S3Image
                     theme={{
                       photoImg: {
@@ -64,7 +52,8 @@ export default function Gallery({ id }) {
                     imgKey={photo.key}
                     alt="profile avatar"
                   />
-                // </div>
+                  <div>{photo.key}</div>
+                </>
               ))}
           </>
         );
