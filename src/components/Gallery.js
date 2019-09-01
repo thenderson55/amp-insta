@@ -5,11 +5,14 @@ import { onUpdateUser} from "../graphql/subscriptions";
 import { Connect } from "aws-amplify-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { S3Image } from "aws-amplify-react";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
-export default function Gallery({ id }) {
- 
+export default function Gallery({ id, useStyles, imgTheme }) {
+  const classes = useStyles();
+
   const onNewPhoto = (prevQuery, newData) => {
     let updatedQuery = { ...prevQuery };
     const updatedPhotoList = [
@@ -35,26 +38,24 @@ export default function Gallery({ id }) {
           return <CircularProgress fullscreen={true} />;
         return (
           <>
+          <div className={classes.root}>
+            <GridList   cols={4}>
             {data.getUser.photos &&
               data.getUser.photos.map(photo => (
                 // <div className={classes.imageWrapper}>
-                <>
-                  <S3Image
-                    theme={{
-                      photoImg: {
-                        margin: 20,
-                        height: 140,
-                        width: 140,
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }
-                    }}
-                    imgKey={photo.key}
-                    alt="profile avatar"
-                  />
-                  <div>{photo.key}</div>
-                </>
+                // <GridListTile key={photo.key} >
+                  // {/* <img src={tile.img} alt={tile.title} /> */}
+                  <>
+                    <S3Image
+                      theme={imgTheme}
+                      imgKey={photo.key}
+                      alt="profile gallery"
+                    ></S3Image>
+                  </>
+                // {/* </GridListTile>  */}
               ))}
+            </GridList>
+          </div>
           </>
         );
       }}
