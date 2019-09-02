@@ -31,6 +31,7 @@ export default function AllMessages() {
   // }
 
   return (
+    
     <Connect
       query={graphqlOperation(listMessages)}
       subscription={graphqlOperation(onCreateMessage)}
@@ -40,11 +41,23 @@ export default function AllMessages() {
         if (errors.length > 0) return console.log(errors);
         if (loading || !data.listMessages)
           return <CircularProgress fullscreen={true} />;
-        console.log(data.listMessages.items);
+
+        // Change to Unix, sort then change back to UTC
+        const changeToUnix = data.listMessages.items.map(message => {
+          const newTime = Math.round(new Date(message.createdAt).getTime()/1000)
+          return {...message, createdAt: newTime}
+        })
+        changeToUnix.sort((a, b) => (b.createdAt > a.createdAt) ? 1 : -1)
+        const sortedByTime = changeToUnix.map(message => {
+          const newTime = new Date(message.createdAt * 1000)
+          return {...message, createdAt: newTime}
+        })
+
+
         return (
           <>
-            {data.listMessages.items &&
-              data.listMessages.items.map(message => (
+            {sortedByTime &&
+              sortedByTime.map(message => (
                 <Message message={message} key={message.id} />
               ))}
           </>
