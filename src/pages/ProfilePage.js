@@ -45,8 +45,8 @@ const ProfilePage = ({ id }) => {
 
   const message = useSelector(state => state.msg);
   const profile = useSelector(state => state.profile);
-  const bioField = useSelector(state => state.profile.bio);
-  const tagsField = useSelector(state => state.profile.tags);
+  let bioField = useSelector(state => state.profile.bio);
+  let tagsField = useSelector(state => state.profile.tags);
   const state = useSelector(state => state);
 
   // console.log('p', profile)
@@ -54,6 +54,13 @@ const ProfilePage = ({ id }) => {
 
   const [open, setOpen] = useState(false);
   const [openImg, setOpenImg] = useState(false);
+
+  if(bioField == null){
+    bioField = ""
+  }
+  if(tagsField == null){
+    tagsField = ""
+  }
 
   function handleClickOpen() {
     setOpen(true);
