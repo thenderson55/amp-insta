@@ -17,6 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { updateMessage, allMessages, setProfileData } from "../store/actions";
 import { useSelector, useDispatch } from "react-redux";
 
+import ChipInput from "material-ui-chip-input";
+
 import { UserContext } from "../App";
 
 const styles = {
@@ -38,13 +40,17 @@ const styles = {
 const ProfilePage = ({ id }) => {
   const [image, setImage] = useState();
   const [bio, setBio] = useState();
+  const [tags, setTags] = useState();
   const [isUploading, setIsUploading] = useState(false);
 
   const message = useSelector(state => state.msg);
   const profile = useSelector(state => state.profile);
+  const bioField = useSelector(state => state.profile.bio);
+  const tagsField = useSelector(state => state.profile.tags);
   const state = useSelector(state => state);
 
-  console.log('p', profile)
+  // console.log('p', profile)
+  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
   const [openImg, setOpenImg] = useState(false);
@@ -57,44 +63,54 @@ const ProfilePage = ({ id }) => {
   }
 
   function handleClose() {
-    console.log('bi', bio)
+    console.log("bi", bio);
     setOpen(false);
   }
   function handleCloseImg() {
-    console.log('bi', bio)
+    console.log("bi", bio);
     setOpenImg(false);
   }
 
-  async function handleUpdate () {
-    console.log('bi', bio)
+  async function handleUpdate() {
+    console.log("bi", bio, tags);
     setOpen(false);
     delete profile.friends;
     delete profile.messages;
     delete profile.comments;
     const input = {
       ...profile,
-      bio
+      bio,
+      tags
     };
     console.log("kk", input);
     const updatedUser = await API.graphql(
       graphqlOperation(updateUser, { input })
     );
-    console.log('gg', updatedUser)
+    console.log("gg", updatedUser);
     dispatch({ type: "SET_PROFILE", payload: input });
 
     setOpen(false);
-
   }
 
+  const handleUpdateBio = e => {
+    console.log("e", e.target.value);
+    // if(e.target.value = null){
+    //   return
+    // }
+    setBio(e.target.value);
+  };
 
-  const dispatch = useDispatch();
+  const handleUpdateTags = e => {
+    console.log("e8", e.target.value);
+    const tagsArr = e.target.value.split(",").map(el => {
+      return el.trim();
+    });
 
-  const handleUpdateProfile = (e) => {
-    console.log('e', e.target.value)
-    setBio(e.target.value)
-  }
+    setTags(tagsArr);
+    console.log("tags", tags);
+  };
 
-  const handleAvatarUpload = async(imgFile) => {
+  const handleAvatarUpload = async imgFile => {
     setIsUploading(true);
 
     // handleFileResize(image)
@@ -105,7 +121,7 @@ const ProfilePage = ({ id }) => {
     const filename = `/${visibility}/${identityId}/${Date.now()}`;
     const uploadedFile = await Storage.put(filename, image.file, {
       // ContentEncoding: 'base64',
-      contentType:  image.type //'image/jpeg'  
+      contentType: image.type //'image/jpeg'
     });
     console.log("file", uploadedFile);
     const file = {
@@ -137,52 +153,50 @@ const ProfilePage = ({ id }) => {
     setIsUploading(false);
   };
 
-  const handleFileResize = (event) => {
+  const handleFileResize = event => {
     // updateMessage("Updated!");
-    let dataUrl = null
-    const filesToUpload = event.target.files
-    const file = filesToUpload[0]
+    let dataUrl = null;
+    const filesToUpload = event.target.files;
+    const file = filesToUpload[0];
     // const file = photo.file
-    console.log('ff', file)
+    console.log("ff", file);
 
-    const img = document.createElement('img')
+    const img = document.createElement("img");
     // img.src = window.URL.createObjectURL(file)
-    const reader = new FileReader()
+    const reader = new FileReader();
 
-    reader.onload = function(e){
-      img.src = e.target.result
+    reader.onload = function(e) {
+      img.src = e.target.result;
 
       img.onload = function() {
+        let canvas = document.createElement("canvas");
+        let ctxOne = canvas.getContext("2d");
+        ctxOne.drawImage(img, 0, 0);
 
-        let canvas = document.createElement("canvas")
-        let ctxOne = canvas.getContext("2d")
-        ctxOne.drawImage(img, 0, 0)
-  
-        let MAX_WIDTH = 800
-        let MAX_HEIGHT = 600
-        let width = img.width
-        let height = img.height
-  
-        if(width > height) {
-          if(width > MAX_WIDTH){
-            height *= MAX_WIDTH / width
-            width = MAX_WIDTH
-  
+        let MAX_WIDTH = 800;
+        let MAX_HEIGHT = 600;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
           }
-        }else {
-          if(height > MAX_HEIGHT){
-            width *= MAX_HEIGHT / height
-            height = MAX_HEIGHT
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
           }
         }
-  
-        canvas.width = width
-        canvas.height = height
-        let ctxTwo = canvas.getContext("2d")
-        ctxTwo.drawImage(img, 0, 0, width, height)
-  
-        dataUrl = canvas.toDataURL("image/jpeg")
-        console.log('dtat', dataUrl)
+
+        canvas.width = width;
+        canvas.height = height;
+        let ctxTwo = canvas.getContext("2d");
+        ctxTwo.drawImage(img, 0, 0, width, height);
+
+        dataUrl = canvas.toDataURL("image/jpeg");
+        console.log("dtat", dataUrl);
         // convert base64 content to binary data object
         // var buf = new Buffer.from(dataUrl.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         // console.log('buf', buf)
@@ -191,18 +205,17 @@ const ProfilePage = ({ id }) => {
 
         // upload file with aws-amplify Storage class
         // Storage.put('image.jpeg', buf, opt);
-  
+
         // Here you post image to S3
-      }
-    }
-    reader.readAsDataURL(file)
+      };
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
     <UserContext.Consumer>
       {({ user }) => (
         <>
-          <div>{user.username}</div>
           <Dialog
             open={openImg}
             onClose={handleCloseImg}
@@ -219,15 +232,28 @@ const ProfilePage = ({ id }) => {
               Add avatar
             </Button>
           </Dialog>
-          <Button variant="outlined" color="primary" onClick={handleClickOpenImg}>
+          
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleClickOpenImg}
+          >
             Change Avatar
           </Button>
-          <input type="file" id="file" style={{display: "none"}} onChange={handleFileResize} multiple/>
+          <br />
+          <br />
+          <input
+            type="file"
+            id="file"
+            style={{ display: "none" }}
+            onChange={handleFileResize}
+            multiple
+          />
           <label for="file">Choose files</label>
           <p>email: {profile.email}</p>
           <p>username: {profile.username}</p>
           <p>bio: {profile.bio}</p>
-          <p>tags: {profile.tags}</p>
+          <p>tags: {profile.tags && profile.tags.map(tag => <span>{tag}, </span>)}</p>
 
           <Button variant="outlined" color="primary" onClick={handleClickOpen}>
             Edit
@@ -238,26 +264,40 @@ const ProfilePage = ({ id }) => {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+            {/* <DialogTitle id="form-dialog-title">Subscribe</DialogTitle> */}
             <DialogContent>
-              <DialogContentText>
-              </DialogContentText>
+              <DialogContentText></DialogContentText>
               <TextField
                 // autoFocus
                 margin="dense"
                 id="bio"
-                label="Bio"
+                // value={bio}
+                // label=bio
+                // value={`${bioField}`}
+                defaultValue={`${bioField}`}
                 type="text"
                 fullWidth
-                onChange={handleUpdateProfile}
+                onChange={handleUpdateBio}
               />
+              {/* <ChipInput
+                // defaultValue={['foo', 'bar']}
+                // fullWidth={true}
+                // label={"hello"}
+                helperText={"Press return to creat each new tag."}
+                placeholder="Tags"
+                // value={yourChips}
+                // onAdd={(chip) => handleAddChip(chip)}
+                // onDelete={(chip, index) => handleDeleteChip(chip, index)}
+              /> */}
               <TextField
-                // autoFocus
                 margin="dense"
                 id="tags"
+                defaultValue={`${tagsField}`}
                 label="Tags"
                 type="email"
                 fullWidth
+                onChange={handleUpdateTags}
+                helperText="Separate tags with commas"
               />
             </DialogContent>
             <DialogActions>
@@ -276,34 +316,33 @@ const ProfilePage = ({ id }) => {
 };
 
 const theme = {
-  formContainer: {
-    margin: 0,
-    padding: 0,
-    height: 100,
-    width: 150
-  },
+  // formContainer: {
+  //   margin: 0,
+  //   padding: 0,
+  //   // height: 100,
+  //   // width: 150
+  // },
   formSection: {
     margin: 0,
     padding: 0,
-    height: 100,
-    width: 150
+    boxShadow: "none"
+    // height: 100,
+    // width: 150
   },
-  sectionBody: {
-    height: 100,
-    width: 150
-    // minWidth: 200,
-  },
+  // sectionBody: {
+  //   height: 100,
+  //   width: 150
+  //   // minWidth: 200,
+  // },
   photoPlaceholder: {
-    boxShadow: "none",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 100,
+    // display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // height: 100,
     // width: 150,
     padding: 0
   },
   sectionHeader: {
-    color: "pink",
     display: "none"
   },
   photoPickerButton: {

@@ -167,3 +167,40 @@ export default function GalleryPage({ id }) {
     </div>
   );
 }
+
+
+const theme = {
+  formContainer: {
+    margin: 0,
+    padding: 0,
+    // height: 100,
+    // width: 150
+  },
+  formSection: {
+    margin: 0,
+    padding: 0,
+    // height: 100,
+    // width: 150
+  },
+  sectionBody: {
+    height: 100,
+    width: 150
+    // minWidth: 200,
+  },
+  photoPlaceholder: {
+    // boxShadow: "none",
+    // display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // height: 100,
+    // // width: 150,
+    // padding: 0
+  },
+  sectionHeader: {
+    color: "pink",
+    display: "none"
+  },
+  photoPickerButton: {
+    content: "Yolo"
+  }
+};

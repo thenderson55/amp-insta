@@ -6,6 +6,8 @@ import { Connect } from "aws-amplify-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { S3Image } from "aws-amplify-react";
 // import { useSelector, useDispatch } from "react-redux";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -40,7 +42,8 @@ export default function Gallery({ id, useStyles, imgTheme }) {
           <>
           <div style={{textAlign: "center"}}>
           <div className={classes.root}>
-            {/* <GridList   cols={4}> */}
+          {/* <Carousel> */}
+
             {data.getUser.photos &&
               data.getUser.photos.map(photo => (
                 // <div className={classes.imageWrapper}>
@@ -57,6 +60,8 @@ export default function Gallery({ id, useStyles, imgTheme }) {
                 // {/* </GridListTile>  */}
               ))}
             {/* </GridList> */}
+          {/* </Carousel> */}
+            {/* <GridList   cols={4}> */}
           </div>
           </div>
           </>

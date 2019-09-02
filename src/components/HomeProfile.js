@@ -10,6 +10,8 @@ import MuiLink from "@material-ui/core/Link";
 import dayjs from "dayjs";
 import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import CheckBox from "@material-ui/icons/CheckBox";
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -40,15 +42,24 @@ const styles = {
     dipaly: "inline-block"
   },
   profileDetails: {
-    paddingLeft: 20
+    paddingLeft: 20,
+    paddingRight: 15,
   },
   textInfo: {
     display: "flex",
     alignItems: "center",
     marginTop: 10,
-    "& span": {
-      marginLeft: 10
-    }
+    // "& span": {
+    //   marginLeft: 10
+    // }
+  },
+  spanText: {
+    marginLeft: 10,
+    // overflow:"auto",
+    whiteSpace: "normal",
+    wordWrap: "break-word"
+    // overflowWrap: "break-word"
+  
   }
 };
 
@@ -61,6 +72,7 @@ const HomeProfile = ({ classes }) => {
       {({ user }) => 
       (
         <Paper className={classes.profile}>
+          <div>
           <div className={classes.imageWrapper}>
             <S3Image
               theme={{
@@ -90,15 +102,19 @@ const HomeProfile = ({ classes }) => {
           <div className={classes.profileDetails}>
             {/* {user.tags && <Typography>Bio</Typography> } */}
             <Typography className={classes.textInfo}>
-              <LocationOn color="primary" />
-              <span>{profile.bio}</span>
+              <AccountCircle color="primary" />
+              <span className={classes.spanText}>{profile.bio}</span>
             </Typography>
-            <Typography className={classes.textInfo}></Typography>
+            <Typography className={classes.textInfo}>
+              <CheckBox color="primary" />{" "}
+              <span className={classes.spanText}>{profile.tags && profile.tags.map(tag => <span>{tag}, </span>)}</span>
+            </Typography>
             <Typography className={classes.textInfo}>
               <CalendarToday color="primary" />{" "}
-              <span>Joined {dayjs(user.createdAt).format("MM YYYY")}</span>
+              <span className={classes.spanText}>Joined {dayjs(user.createdAt).format("MM YYYY")}</span>
             </Typography>
             <br />
+          </div>
           </div>
         </Paper>
       )}
