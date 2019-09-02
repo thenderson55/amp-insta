@@ -47,14 +47,22 @@ const ProfilePage = ({ id }) => {
   console.log('p', profile)
 
   const [open, setOpen] = useState(false);
+  const [openImg, setOpenImg] = useState(false);
 
   function handleClickOpen() {
     setOpen(true);
+  }
+  function handleClickOpenImg() {
+    setOpenImg(true);
   }
 
   function handleClose() {
     console.log('bi', bio)
     setOpen(false);
+  }
+  function handleCloseImg() {
+    console.log('bi', bio)
+    setOpenImg(false);
   }
 
   async function handleUpdate () {
@@ -86,17 +94,18 @@ const ProfilePage = ({ id }) => {
     setBio(e.target.value)
   }
 
-  const handleAvatarUpload = async user => {
+  const handleAvatarUpload = async(imgFile) => {
     setIsUploading(true);
 
-    handleFileResize(image)
+    // handleFileResize(image)
 
     const visibility = "public";
-    console.log(user.attributes.sub);
+    // console.log(user.attributes.sub);
     const { identityId } = await Auth.currentCredentials();
-    const filename = `/${visibility}/${identityId}/${Date.now()}-${image.name}`;
+    const filename = `/${visibility}/${identityId}/${Date.now()}`;
     const uploadedFile = await Storage.put(filename, image.file, {
-      contentType: image.type
+      // ContentEncoding: 'base64',
+      contentType:  image.type //'image/jpeg'  
     });
     console.log("file", uploadedFile);
     const file = {
@@ -107,7 +116,7 @@ const ProfilePage = ({ id }) => {
     dispatch({ type: "SET_AVATAR", payload: uploadedFile.key });
     const currentUserInfo = await API.graphql(
       graphqlOperation(getUser, {
-        id: user.attributes.sub
+        id
       })
     );
     // AWS didn't add friends, messages, comments to mutations for some reason
@@ -145,14 +154,14 @@ const ProfilePage = ({ id }) => {
 
       img.onload = function() {
 
-        const canvas = document.createElement("canvas")
-        const ctxOne = canvas.getContext("2d")
+        let canvas = document.createElement("canvas")
+        let ctxOne = canvas.getContext("2d")
         ctxOne.drawImage(img, 0, 0)
   
-        const MAX_WIDTH = 800
-        const MAX_HEIGHT = 600
-        const width = img.width
-        const height = img.height
+        let MAX_WIDTH = 800
+        let MAX_HEIGHT = 600
+        let width = img.width
+        let height = img.height
   
         if(width > height) {
           if(width > MAX_WIDTH){
@@ -174,6 +183,14 @@ const ProfilePage = ({ id }) => {
   
         dataUrl = canvas.toDataURL("image/jpeg")
         console.log('dtat', dataUrl)
+        // convert base64 content to binary data object
+        // var buf = new Buffer.from(dataUrl.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        // console.log('buf', buf)
+
+        // handleAvatarUpload(dataUrl)
+
+        // upload file with aws-amplify Storage class
+        // Storage.put('image.jpeg', buf, opt);
   
         // Here you post image to S3
       }
@@ -186,15 +203,27 @@ const ProfilePage = ({ id }) => {
       {({ user }) => (
         <>
           <div>{user.username}</div>
-          <PhotoPicker
-            theme={theme}
-            preview
-            onPick={file => setImage(file)}
-          ></PhotoPicker>
-          <input type="file" onChange={handleFileResize} multiple/>
-          <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
-            Add avatar
+          <Dialog
+            open={openImg}
+            onClose={handleCloseImg}
+            aria-labelledby="form-dialog-title"
+          >
+            <PhotoPicker
+              // id="file"
+              // name="file"
+              theme={theme}
+              preview
+              onPick={file => setImage(file)}
+            ></PhotoPicker>
+            <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
+              Add avatar
+            </Button>
+          </Dialog>
+          <Button variant="outlined" color="primary" onClick={handleClickOpenImg}>
+            Change Avatar
           </Button>
+          <input type="file" id="file" style={{display: "none"}} onChange={handleFileResize} multiple/>
+          <label for="file">Choose files</label>
           <p>email: {profile.email}</p>
           <p>username: {profile.username}</p>
           <p>bio: {profile.bio}</p>
@@ -249,11 +278,15 @@ const ProfilePage = ({ id }) => {
 const theme = {
   formContainer: {
     margin: 0,
-    padding: 0
+    padding: 0,
+    height: 100,
+    width: 150
   },
   formSection: {
     margin: 0,
-    padding: 0
+    padding: 0,
+    height: 100,
+    width: 150
   },
   sectionBody: {
     height: 100,
@@ -270,11 +303,12 @@ const theme = {
     padding: 0
   },
   sectionHeader: {
-    color: "pink"
+    color: "pink",
+    display: "none"
+  },
+  photoPickerButton: {
+    display: "none"
   }
-  // photoPickerButton: {
-  //   display: "none"
-  // }
 };
 
 export default withStyles(styles)(ProfilePage);

@@ -13,7 +13,10 @@ import CalendarToday from "@material-ui/icons/CalendarToday";
 
 import { useSelector, useDispatch } from 'react-redux'
 
-
+// Convert B64 to image
+// var image = new Image();
+// image.src = 'data:image/png;base64,iVBORw0K...';
+// document.body.appendChild(image);
 
 const styles = {
   profile: {
