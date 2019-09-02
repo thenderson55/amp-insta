@@ -6,9 +6,36 @@ import { useSelector, useDispatch } from "react-redux";
 import { getUser } from '../graphql/queries'
 import { updateUser } from '../graphql/mutations'
 import Gallery from '../components/Gallery'
-
-
 import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const imgTheme = {
+  photoImg: {
+    margin: 20,
+    height: 140,
+    width: 140,
+    // borderRadius: "50%",
+    objectFit: "cover",
+  }
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    borderRadius: "2%",
+
+    backgroundColor: theme.palette.background.paper,
+    // paddingBottom: 20
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+  },
+}));
 
 
 export default function GalleryPage({ id }) {
@@ -134,9 +161,46 @@ export default function GalleryPage({ id }) {
         Uplaod Image
       </Button>
         Gallery {id}
-      <Gallery id={id}></Gallery>
+      <Gallery id={id} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
       {/* <input type='file' id='single' onChange={onChange} />  */}
 
     </div>
   );
 }
+
+
+const theme = {
+  formContainer: {
+    margin: 0,
+    padding: 0,
+    // height: 100,
+    // width: 150
+  },
+  formSection: {
+    margin: 0,
+    padding: 0,
+    // height: 100,
+    // width: 150
+  },
+  sectionBody: {
+    height: 100,
+    width: 150
+    // minWidth: 200,
+  },
+  photoPlaceholder: {
+    // boxShadow: "none",
+    // display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // height: 100,
+    // // width: 150,
+    // padding: 0
+  },
+  sectionHeader: {
+    color: "pink",
+    display: "none"
+  },
+  photoPickerButton: {
+    content: "Yolo"
+  }
+};

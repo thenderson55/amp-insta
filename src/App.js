@@ -120,6 +120,7 @@ function App() {
       key = profile.avatar.key
     }
     dispatch({ type: "SET_AVATAR", payload:key })
+    dispatch({ type: "SET_PROFILE", payload:profile })
   };
 
   const handleSignOut = async () => {

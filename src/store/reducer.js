@@ -1,6 +1,7 @@
 
 const initialState = {
   user: "",
+  profile: "",
   avatar: "",
   msg: "Yo"
 };
@@ -18,6 +19,8 @@ const reducer = (state = initialState, action) => {
     //   return state
     case "SET_NEW_USER":
       return { ...state, user: action.payload };
+    case "SET_PROFILE":
+      return { ...state, profile: action.payload };
     case "SET_AVATAR":
       return { ...state, avatar: action.payload };
     default:
