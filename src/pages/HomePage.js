@@ -20,16 +20,16 @@ const imgTheme = {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "grid", /* 1 */
-    gridTemplateColumns: "repeat(4, 45px)", /* 2 */
-    // gridTemplateRows: "repeat(auto-fill, 45px)", /* 2 */
-    gridGap: "0.5rem", /* 3 */
-    // justifyContent: "space-around", /* 4 */
-    // display: 'flex',
-    // flexWrap: 'wrap',
-    // // justifyContent: 'center',
-    // overflow: 'hidden',
-    // borderRadius: "2%",
+    // display: "grid", /* 1 */
+    // gridTemplateColumns: "repeat(4, 45px)", /* 2 */
+    // // gridTemplateRows: "repeat(auto-fill, 45px)", /* 2 */
+    // gridGap: "0.5rem", /* 3 */
+    justifyContent: "space-around", /* 4 */
+    display: 'flex',
+    flexWrap: 'wrap',
+    // justifyContent: 'center',
+    overflow: 'hidden',
+    borderRadius: "2%",
 
     backgroundColor: theme.palette.background.paper,
     // // // paddingBottom: 20

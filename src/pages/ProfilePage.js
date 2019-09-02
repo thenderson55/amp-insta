@@ -88,6 +88,9 @@ const ProfilePage = ({ id }) => {
 
   const handleAvatarUpload = async user => {
     setIsUploading(true);
+
+    handleFileResize(image)
+
     const visibility = "public";
     console.log(user.attributes.sub);
     const { identityId } = await Auth.currentCredentials();
@@ -125,8 +128,57 @@ const ProfilePage = ({ id }) => {
     setIsUploading(false);
   };
 
-  const handleUpdateMsg = () => {
-    updateMessage("Updated!");
+  const handleFileResize = (event) => {
+    // updateMessage("Updated!");
+    let dataUrl = null
+    const filesToUpload = event.target.files
+    const file = filesToUpload[0]
+    // const file = photo.file
+    console.log('ff', file)
+
+    const img = document.createElement('img')
+    // img.src = window.URL.createObjectURL(file)
+    const reader = new FileReader()
+
+    reader.onload = function(e){
+      img.src = e.target.result
+
+      img.onload = function() {
+
+        const canvas = document.createElement("canvas")
+        const ctxOne = canvas.getContext("2d")
+        ctxOne.drawImage(img, 0, 0)
+  
+        const MAX_WIDTH = 800
+        const MAX_HEIGHT = 600
+        const width = img.width
+        const height = img.height
+  
+        if(width > height) {
+          if(width > MAX_WIDTH){
+            height *= MAX_WIDTH / width
+            width = MAX_WIDTH
+  
+          }
+        }else {
+          if(height > MAX_HEIGHT){
+            width *= MAX_HEIGHT / height
+            height = MAX_HEIGHT
+          }
+        }
+  
+        canvas.width = width
+        canvas.height = height
+        let ctxTwo = canvas.getContext("2d")
+        ctxTwo.drawImage(img, 0, 0, width, height)
+  
+        dataUrl = canvas.toDataURL("image/jpeg")
+        console.log('dtat', dataUrl)
+  
+        // Here you post image to S3
+      }
+    }
+    reader.readAsDataURL(file)
   };
 
   return (
@@ -139,6 +191,7 @@ const ProfilePage = ({ id }) => {
             preview
             onPick={file => setImage(file)}
           ></PhotoPicker>
+          <input type="file" onChange={handleFileResize} multiple/>
           <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
             Add avatar
           </Button>
