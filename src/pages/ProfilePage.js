@@ -7,6 +7,10 @@ import { PhotoPicker } from "aws-amplify-react";
 import { getUser } from "../graphql/queries";
 import { updateUser } from "../graphql/mutations";
 import awsmobile from "../aws-exports";
+import Gallery from "../components/Gallery";
+import { makeStyles } from '@material-ui/core/styles';
+import Link from 'react-router-dom/Link'
+
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -14,52 +18,31 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { updateMessage, allMessages, setProfileData } from "../store/actions";
 import { useSelector, useDispatch } from "react-redux";
-
-import ChipInput from "material-ui-chip-input";
 
 import { UserContext } from "../App";
 
-const styles = {
-  card: {
-    display: "flex",
-    marginBottom: 20,
-    height: "20%"
-  },
-  image: {
-    minWidth: 100,
-    maxWidth: 150,
-    objectFit: "cover"
-  },
-  content: {
-    paddingLeft: 30
-  }
-};
 
-const ProfilePage = ({ id }) => {
+const ProfilePage = ({ id, match }) => {
   const [image, setImage] = useState();
   const [bio, setBio] = useState();
   const [tags, setTags] = useState();
   const [isUploading, setIsUploading] = useState(false);
-
-  const message = useSelector(state => state.msg);
-  const profile = useSelector(state => state.profile);
-  let bioField = useSelector(state => state.profile.bio);
-  let tagsField = useSelector(state => state.profile.tags);
-  const state = useSelector(state => state);
-
-  // console.log('p', profile)
-  const dispatch = useDispatch();
-
+  const [visitProfile, setVisitProfile] = useState();
   const [open, setOpen] = useState(false);
   const [openImg, setOpenImg] = useState(false);
 
-  if(bioField == null){
-    bioField = ""
+  const profile = useSelector(state => state.profile);
+  let bioField = useSelector(state => state.profile.bio);
+  let tagsField = useSelector(state => state.profile.tags);
+
+  const dispatch = useDispatch();
+
+  if (bioField == null) {
+    bioField = "";
   }
-  if(tagsField == null){
-    tagsField = ""
+  if (tagsField == null) {
+    tagsField = "";
   }
 
   function handleClickOpen() {
@@ -70,11 +53,9 @@ const ProfilePage = ({ id }) => {
   }
 
   function handleClose() {
-    console.log("bi", bio);
     setOpen(false);
   }
   function handleCloseImg() {
-    console.log("bi", bio);
     setOpenImg(false);
   }
 
@@ -99,31 +80,34 @@ const ProfilePage = ({ id }) => {
     setOpen(false);
   }
 
+  useEffect(() => {
+    visitedProfileInfo();
+  }, []);
+
+  const visitedProfileInfo = async () => {
+    const result = await API.graphql(
+      graphqlOperation(getUser, {
+        id: match.params.id
+      })
+    );
+    setVisitProfile(result.data.getUser);
+  };
+
+  // TODO - fix so don't need to type something to get state
   const handleUpdateBio = e => {
-    console.log("e", e.target.value);
-    // if(e.target.value = null){
-    //   return
-    // }
     setBio(e.target.value);
   };
 
   const handleUpdateTags = e => {
-    console.log("e8", e.target.value);
     const tagsArr = e.target.value.split(",").map(el => {
       return el.trim();
     });
-
     setTags(tagsArr);
-    console.log("tags", tags);
   };
 
   const handleAvatarUpload = async imgFile => {
     setIsUploading(true);
-
-    // handleFileResize(image)
-
     const visibility = "public";
-    // console.log(user.attributes.sub);
     const { identityId } = await Auth.currentCredentials();
     const filename = `/${visibility}/${identityId}/${Date.now()}`;
     const uploadedFile = await Storage.put(filename, image.file, {
@@ -239,32 +223,50 @@ const ProfilePage = ({ id }) => {
               Add avatar
             </Button>
           </Dialog>
-          
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleClickOpenImg}
-          >
-            Change Avatar
-          </Button>
-          <br />
-          <br />
-          <input
-            type="file"
-            id="file"
-            style={{ display: "none" }}
-            onChange={handleFileResize}
-            multiple
-          />
-          <label for="file">Choose files</label>
-          <p>email: {profile.email}</p>
-          <p>username: {profile.username}</p>
-          <p>bio: {profile.bio}</p>
-          <p>tags: {profile.tags && profile.tags.map(tag => <span>{tag}, </span>)}</p>
 
-          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-            Edit
-          </Button>
+          {/* Render change avatar button is id matches current user */}
+          {match.params.id == profile.id && 
+            <>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleClickOpenImg}
+              >
+                Change Avatar
+              </Button>
+              <br />
+              <br />
+              <input
+                type="file"
+                id="file"
+                style={{ display: "none" }}
+                onChange={handleFileResize}
+                multiple
+              />
+              <label for="file">Choose files</label>
+            </>
+          }
+          
+          {visitProfile && (
+            <>
+              <p>email: {visitProfile.email}</p>
+              <p>username: {visitProfile.username}</p>
+              <p>bio: {visitProfile.bio}</p>
+              <p>
+                tags:{" "}
+                {visitProfile.tags &&
+                  visitProfile.tags.map(tag => <span>{tag}, </span>)}
+              </p>
+            </>
+          )}
+          
+          {/* Render edit button is id matches current user */}
+          {match.params.id == profile.id && 
+            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+              Edit
+            </Button>
+          }   
+
 
           <Dialog
             open={open}
@@ -286,16 +288,7 @@ const ProfilePage = ({ id }) => {
                 fullWidth
                 onChange={handleUpdateBio}
               />
-              {/* <ChipInput
-                // defaultValue={['foo', 'bar']}
-                // fullWidth={true}
-                // label={"hello"}
-                helperText={"Press return to creat each new tag."}
-                placeholder="Tags"
-                // value={yourChips}
-                // onAdd={(chip) => handleAddChip(chip)}
-                // onDelete={(chip, index) => handleDeleteChip(chip, index)}
-              /> */}
+       
               <TextField
                 margin="dense"
                 id="tags"
@@ -316,10 +309,62 @@ const ProfilePage = ({ id }) => {
               </Button>
             </DialogActions>
           </Dialog>
+
+          <br/>
+          <br/>
+          <Gallery id={match.params.id} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
+          <br/>
+          {match.params.id == profile.id && 
+            <Button variant="outlined" color="primary" component={Link} to={`/gallery/${match.params.id}`}>
+              Gallery
+            </Button>
+          } 
         </>
       )}
     </UserContext.Consumer>
   );
+};
+
+// Styling
+
+const imgTheme = {
+  photoImg: {
+    margin: 20,
+    height: 140,
+    width: 140,
+    objectFit: "cover",
+  }
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    borderRadius: "2%",
+    backgroundColor: theme.palette.background.paper,
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+  },
+}));
+
+const styles = {
+  card: {
+    display: "flex",
+    marginBottom: 20,
+    height: "20%"
+  },
+  image: {
+    minWidth: 100,
+    maxWidth: 150,
+    objectFit: "cover"
+  },
+  content: {
+    paddingLeft: 30
+  }
 };
 
 const theme = {

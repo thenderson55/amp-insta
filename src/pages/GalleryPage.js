@@ -9,35 +9,6 @@ import Gallery from '../components/Gallery'
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
-
-const imgTheme = {
-  photoImg: {
-    margin: 20,
-    height: 140,
-    width: 140,
-    // borderRadius: "50%",
-    objectFit: "cover",
-  }
-}
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    borderRadius: "2%",
-    paddingBottom: 20,
-    backgroundColor: theme.palette.background.paper,
-    // paddingBottom: 20
-  },
-  gridList: {
-    width: 500,
-    height: 450,
-  },
-}));
-
-
 export default function GalleryPage({ id }) {
 
   const [image, setImage] = useState() 
@@ -147,7 +118,7 @@ export default function GalleryPage({ id }) {
     //     images
     //   })
     // })
-  
+  const remove = true
 
   console.log("user gallery:", user);
   return (
@@ -161,12 +132,39 @@ export default function GalleryPage({ id }) {
         Uplaod Image
       </Button>
         Gallery {id}
-      <Gallery id={id} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
+      <Gallery id={id} remove={remove} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
       {/* <input type='file' id='single' onChange={onChange} />  */}
 
     </div>
   );
 }
+
+const imgTheme = {
+  photoImg: {
+    margin: 20,
+    height: 140,
+    width: 140,
+    // borderRadius: "50%",
+    objectFit: "cover",
+  }
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    borderRadius: "2%",
+    paddingBottom: 20,
+    backgroundColor: theme.palette.background.paper,
+    // paddingBottom: 20
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+  },
+}));
 
 
 const theme = {

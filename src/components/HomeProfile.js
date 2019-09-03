@@ -63,9 +63,10 @@ const styles = {
   }
 };
 
-const HomeProfile = ({ classes }) => {
+const HomeProfile = ({ classes, match }) => {
   const avatar = useSelector(state => state.avatar);
   const profile = useSelector(state => state.profile);
+  console.log('mm', match)
 
   return (
     <UserContext.Consumer>

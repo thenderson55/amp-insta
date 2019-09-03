@@ -14,7 +14,7 @@ import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
-export default function Gallery({ id, useStyles, imgTheme }) {
+export default function Gallery({ id, useStyles, imgTheme, remove }) {
   const classes = useStyles();
 
   const onNewPhoto = (prevQuery, newData) => {
@@ -99,7 +99,10 @@ export default function Gallery({ id, useStyles, imgTheme }) {
                         alt="profile gallery"
                       >
                       </S3Image>
+                      {remove && (
+
                       <DeleteOutline className="delete-icon" onClick={() => {handleImageRemove(photo.key)} }/>
+                      )}
                     </div>
                     {/* <button onClick={() => {handleImageRemove(photo.key)} }>Delete</button> */}
                   </>
