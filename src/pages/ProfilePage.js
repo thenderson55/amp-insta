@@ -8,10 +8,10 @@ import { getUser } from "../graphql/queries";
 import { updateUser } from "../graphql/mutations";
 import awsmobile from "../aws-exports";
 import Gallery from "../components/Gallery";
-import { makeStyles } from '@material-ui/core/styles';
-import Link from 'react-router-dom/Link'
+import { makeStyles } from "@material-ui/core/styles";
+import Link from "react-router-dom/Link";
 
-
+import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -21,7 +21,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useSelector, useDispatch } from "react-redux";
 
 import { UserContext } from "../App";
-
 
 const ProfilePage = ({ id, match }) => {
   const [image, setImage] = useState();
@@ -59,6 +58,18 @@ const ProfilePage = ({ id, match }) => {
     setOpenImg(false);
   }
 
+  // TODO - fix so don't need to type something to get state
+  const handleUpdateBio = e => {
+    setBio(e.target.value);
+  };
+
+  const handleUpdateTags = e => {
+    const tagsArr = e.target.value.split(",").map(el => {
+      return el.trim();
+    });
+    setTags(tagsArr);
+  };
+
   async function handleUpdate() {
     console.log("bi", bio, tags);
     setOpen(false);
@@ -91,18 +102,6 @@ const ProfilePage = ({ id, match }) => {
       })
     );
     setVisitProfile(result.data.getUser);
-  };
-
-  // TODO - fix so don't need to type something to get state
-  const handleUpdateBio = e => {
-    setBio(e.target.value);
-  };
-
-  const handleUpdateTags = e => {
-    const tagsArr = e.target.value.split(",").map(el => {
-      return el.trim();
-    });
-    setTags(tagsArr);
   };
 
   const handleAvatarUpload = async imgFile => {
@@ -225,7 +224,7 @@ const ProfilePage = ({ id, match }) => {
           </Dialog>
 
           {/* Render change avatar button is id matches current user */}
-          {match.params.id == profile.id && 
+          {match.params.id == profile.id && (
             <>
               <Button
                 variant="outlined"
@@ -245,28 +244,53 @@ const ProfilePage = ({ id, match }) => {
               />
               <label for="file">Choose files</label>
             </>
-          }
-          
+          )}
+
           {visitProfile && (
             <>
               <p>email: {visitProfile.email}</p>
               <p>username: {visitProfile.username}</p>
-              <p>bio: {visitProfile.bio}</p>
+              <p>
+                bio:{" "}
+                {visitProfile.id == profile.id ? profile.bio : visitProfile.bio}
+              </p>
               <p>
                 tags:{" "}
-                {visitProfile.tags &&
-                  visitProfile.tags.map(tag => <span>{tag}, </span>)}
+                {visitProfile.id == profile.id
+                  ? profile.tags &&
+                    profile.tags.map((tag, i) => (
+                        <Chip
+                          key={i}
+                          style={{ margin: "2px" }}
+                          label={`${tag}`}
+                          component="a"
+                          variant="outlined"
+                        />
+                    ))
+                  : visitProfile.tags &&
+                    visitProfile.tags.map((tag, i) => (
+                        <Chip
+                          key={i}
+                          style={{ margin: "2px" }}
+                          label={`${tag}`}
+                          component="a"
+                          variant="outlined"
+                        />
+                    ))}
               </p>
             </>
           )}
-          
+
           {/* Render edit button is id matches current user */}
-          {match.params.id == profile.id && 
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+          {match.params.id == profile.id && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Edit
             </Button>
-          }   
-
+          )}
 
           <Dialog
             open={open}
@@ -288,7 +312,7 @@ const ProfilePage = ({ id, match }) => {
                 fullWidth
                 onChange={handleUpdateBio}
               />
-       
+
               <TextField
                 margin="dense"
                 id="tags"
@@ -310,15 +334,24 @@ const ProfilePage = ({ id, match }) => {
             </DialogActions>
           </Dialog>
 
-          <br/>
-          <br/>
-          <Gallery id={match.params.id} useStyles={useStyles} imgTheme={imgTheme}></Gallery>
-          <br/>
-          {match.params.id == profile.id && 
-            <Button variant="outlined" color="primary" component={Link} to={`/gallery/${match.params.id}`}>
+          <br />
+          <br />
+          <Gallery
+            id={match.params.id}
+            useStyles={useStyles}
+            imgTheme={imgTheme}
+          ></Gallery>
+          <br />
+          {match.params.id == profile.id && (
+            <Button
+              variant="outlined"
+              color="primary"
+              component={Link}
+              to={`/gallery/${match.params.id}`}
+            >
               Gallery
             </Button>
-          } 
+          )}
         </>
       )}
     </UserContext.Consumer>
@@ -332,23 +365,23 @@ const imgTheme = {
     margin: 20,
     height: 140,
     width: 140,
-    objectFit: "cover",
+    objectFit: "cover"
   }
-}
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden",
     borderRadius: "2%",
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper
   },
   gridList: {
     width: 500,
-    height: 450,
-  },
+    height: 450
+  }
 }));
 
 const styles = {
