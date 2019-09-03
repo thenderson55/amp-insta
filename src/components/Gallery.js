@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from "../graphql/queries";
+import { updateUser } from "../graphql/mutations";
 import { onUpdateUser} from "../graphql/subscriptions";
 import { Connect } from "aws-amplify-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -17,13 +18,52 @@ export default function Gallery({ id, useStyles, imgTheme }) {
 
   const onNewPhoto = (prevQuery, newData) => {
     let updatedQuery = { ...prevQuery };
-    const updatedPhotoList = [
-      newData.onUpdateUser.photos[0],
-      ...prevQuery.getUser.photos
-    ];
-    updatedQuery.getUser.photos = updatedPhotoList;
+    if( newData.onUpdateUser.photos.length > prevQuery.getUser.photos.length){
+      const updatedPhotoList = [
+        newData.onUpdateUser.photos[0],
+        ...prevQuery.getUser.photos
+      ];
+      updatedQuery.getUser.photos = updatedPhotoList;
+    } else {
+      updatedQuery.getUser.photos = newData.onUpdateUser.photos
+    }
     return updatedQuery;
   };
+
+
+  const handleImageRemove = async (imgKey) => {
+    // console.log(user.attributes.sub)
+    // const { identityId } = await Auth.currentCredentials()
+    // const filename = `/${visibility}/${identityId}/${Date.now()}-${image.name}`
+    // const uploadedFile = await Storage.put(filename, image.file, {
+    //   contentType: image.type
+    // })
+    // console.log('file', uploadedFile)
+    // const file = {
+    //   key: uploadedFile.key,
+    //   bucket: awsmobile.aws_user_files_s3_bucket,
+    //   region: awsmobile.aws_user_files_s3_bucket_region
+    // }
+    // dispatch ({ type: "SET_AVATAR", payload: uploadedFile.key })
+    const currentUserInfo = await API.graphql(
+      graphqlOperation(getUser, {
+        id
+      })
+    );
+    // AWS didn't add friends, messages, comments to mutations for some reason
+    // Possible because they are not scalar types?
+    delete currentUserInfo.data.getUser.friends
+    delete currentUserInfo.data.getUser.messages
+    delete currentUserInfo.data.getUser.comments
+    const updatedPhotos = currentUserInfo.data.getUser.photos.filter(photo => {
+      return photo.key != imgKey
+    })
+    const input = {
+      ...currentUserInfo.data.getUser,
+      photos: updatedPhotos
+    }
+    const updatedUser = await API.graphql(graphqlOperation(updateUser, {input}))
+  }
 
 
   return (
@@ -33,6 +73,7 @@ export default function Gallery({ id, useStyles, imgTheme }) {
       })}
       subscription={graphqlOperation(onUpdateUser)}
       onSubscriptionMsg={onNewPhoto}
+      // onSubscriptionMsg={onDeletePhoto}
     >
       {({ data, loading, errors }) => {
         if (errors.length > 0) return console.log(errors);
@@ -50,12 +91,12 @@ export default function Gallery({ id, useStyles, imgTheme }) {
                 // <GridListTile key={photo.key} >
                   // {/* <img src={tile.img} alt={tile.title} /> */}
                   <>
-
                     <S3Image
                       theme={imgTheme}
                       imgKey={photo.key}
                       alt="profile gallery"
                     ></S3Image>
+                    <button onClick={() => {handleImageRemove(photo.key)} }>Delete</button>
                   </>
                 // {/* </GridListTile>  */}
               ))}
