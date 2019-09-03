@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-around',
     overflow: 'hidden',
     borderRadius: "2%",
-
+    paddingBottom: 20,
     backgroundColor: theme.palette.background.paper,
     // paddingBottom: 20
   },
@@ -46,7 +46,7 @@ export default function GalleryPage({ id }) {
   const user = useSelector(state => state.user);
   const dispatch = useDispatch()
 
-  const handleAvatarUpload = async () => {
+  const handleImageUpload = async () => {
     setIsUploading(true)
     const visibility = "public"
     console.log(user.attributes.sub)
@@ -157,7 +157,7 @@ export default function GalleryPage({ id }) {
         preview
         onPick={file => setImage(file)}
       ></PhotoPicker>
-      <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
+      <Button disabled={!image} onClick={() => handleImageUpload(user)}>
         Uplaod Image
       </Button>
         Gallery {id}

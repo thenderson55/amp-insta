@@ -23,6 +23,19 @@ a {
   /* dipaly: "inline-block", */
 }
 
+.image-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-icon {
+  margin-left: 20px;
+  margin-top: -10px;
+}
+.delete-icon:hover {
+  color: grey;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

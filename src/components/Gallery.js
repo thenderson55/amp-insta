@@ -9,6 +9,7 @@ import { S3Image } from "aws-amplify-react";
 // import { useSelector, useDispatch } from "react-redux";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
+import DeleteOutline from "@material-ui/icons/DeleteOutline";
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -91,12 +92,16 @@ export default function Gallery({ id, useStyles, imgTheme }) {
                 // <GridListTile key={photo.key} >
                   // {/* <img src={tile.img} alt={tile.title} /> */}
                   <>
-                    <S3Image
-                      theme={imgTheme}
-                      imgKey={photo.key}
-                      alt="profile gallery"
-                    ></S3Image>
-                    <button onClick={() => {handleImageRemove(photo.key)} }>Delete</button>
+                    <div className="image-wrapper">
+                      <S3Image
+                        theme={imgTheme}
+                        imgKey={photo.key}
+                        alt="profile gallery"
+                      >
+                      </S3Image>
+                      <DeleteOutline className="delete-icon" onClick={() => {handleImageRemove(photo.key)} }/>
+                    </div>
+                    {/* <button onClick={() => {handleImageRemove(photo.key)} }>Delete</button> */}
                   </>
                 // {/* </GridListTile>  */}
               ))}
