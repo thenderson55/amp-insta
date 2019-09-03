@@ -92,7 +92,7 @@ export default function Gallery({ id, useStyles, imgTheme, remove }) {
                 // <GridListTile key={photo.key} >
                   // {/* <img src={tile.img} alt={tile.title} /> */}
                   <>
-                    <div className="image-wrapper">
+                    <div key={photo.key} className="image-wrapper">
                       <S3Image
                         theme={imgTheme}
                         imgKey={photo.key}

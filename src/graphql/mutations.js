@@ -20,15 +20,55 @@ export const registerUser = `mutation RegisterUser($input: CreateUserInput!) {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -47,8 +87,19 @@ export const registerUser = `mutation RegisterUser($input: CreateUserInput!) {
     messages {
       items {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       nextToken
@@ -59,8 +110,19 @@ export const registerUser = `mutation RegisterUser($input: CreateUserInput!) {
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -99,15 +161,55 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -126,8 +228,19 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     messages {
       items {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       nextToken
@@ -138,8 +251,19 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -174,15 +298,55 @@ export const createMessage = `mutation CreateMessage($input: CreateMessageInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -205,6 +369,12 @@ export const createMessage = `mutation CreateMessage($input: CreateMessageInput!
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -229,15 +399,55 @@ export const updateMessage = `mutation UpdateMessage($input: UpdateMessageInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -260,6 +470,12 @@ export const updateMessage = `mutation UpdateMessage($input: UpdateMessageInput!
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -284,15 +500,55 @@ export const deleteMessage = `mutation DeleteMessage($input: DeleteMessageInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -315,6 +571,12 @@ export const deleteMessage = `mutation DeleteMessage($input: DeleteMessageInput!
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -337,11 +599,46 @@ export const createComment = `mutation CreateComment($input: CreateCommentInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -364,11 +661,46 @@ export const updateComment = `mutation UpdateComment($input: UpdateCommentInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -391,11 +723,46 @@ export const deleteComment = `mutation DeleteComment($input: DeleteCommentInput!
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt

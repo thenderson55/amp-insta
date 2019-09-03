@@ -20,15 +20,55 @@ export const onCreateUser = `subscription OnCreateUser {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -47,8 +87,19 @@ export const onCreateUser = `subscription OnCreateUser {
     messages {
       items {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       nextToken
@@ -59,8 +110,19 @@ export const onCreateUser = `subscription OnCreateUser {
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -99,15 +161,55 @@ export const onUpdateUser = `subscription OnUpdateUser {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -126,8 +228,19 @@ export const onUpdateUser = `subscription OnUpdateUser {
     messages {
       items {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       nextToken
@@ -138,8 +251,19 @@ export const onUpdateUser = `subscription OnUpdateUser {
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -174,15 +298,55 @@ export const onCreateMessage = `subscription OnCreateMessage {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -205,6 +369,12 @@ export const onCreateMessage = `subscription OnCreateMessage {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -229,15 +399,55 @@ export const onUpdateMessage = `subscription OnUpdateMessage {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -260,6 +470,12 @@ export const onUpdateMessage = `subscription OnUpdateMessage {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -284,15 +500,55 @@ export const onDeleteMessage = `subscription OnDeleteMessage {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -315,6 +571,12 @@ export const onDeleteMessage = `subscription OnDeleteMessage {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -337,11 +599,46 @@ export const onCreateComment = `subscription OnCreateComment {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -364,11 +661,46 @@ export const onUpdateComment = `subscription OnUpdateComment {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -391,11 +723,46 @@ export const onDeleteComment = `subscription OnDeleteComment {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt

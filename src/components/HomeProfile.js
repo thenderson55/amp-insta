@@ -21,52 +21,10 @@ import { useSelector, useDispatch } from "react-redux";
 // image.src = 'data:image/png;base64,iVBORw0K...';
 // document.body.appendChild(image);
 
-const styles = {
-  profile: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  card: {
-    display: "flex",
-    marginBottom: 20,
-    height: "20%"
-  },
-  imageWrapper: {
-    textAlign: "center"
-  },
-  image: {
-    margin: 20,
-    height: 140,
-    width: 140,
-    borderRadius: "50%",
-    objectFit: "cover",
-    dipaly: "inline-block"
-  },
-  profileDetails: {
-    paddingLeft: 20,
-    paddingRight: 15
-  },
-  textInfo: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: 10
-    // "& span": {
-    //   marginLeft: 10
-    // }
-  },
-  spanText: {
-    marginLeft: 10,
-    // overflow:"auto",
-    whiteSpace: "normal",
-    wordWrap: "break-word"
-    // overflowWrap: "break-word"
-  }
-};
 
 const HomeProfile = ({ classes, match }) => {
   const avatar = useSelector(state => state.avatar);
   const profile = useSelector(state => state.profile);
-  console.log('mm', match)
 
   return (
     <UserContext.Consumer>
@@ -109,8 +67,9 @@ const HomeProfile = ({ classes, match }) => {
                 <CheckBox color="primary" />{" "}
                 <span className={classes.spanText}>
                   {profile.tags &&
-                    profile.tags.map(tag => (
+                    profile.tags.map((tag, i) => (
                       <Chip
+                        key={i}
                         style={{ margin: "2px" }}
                         label={`${tag}`}
                         component="a"
@@ -134,6 +93,49 @@ const HomeProfile = ({ classes, match }) => {
       )}
     </UserContext.Consumer>
   );
+};
+
+
+const styles = {
+  profile: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  card: {
+    display: "flex",
+    marginBottom: 20,
+    height: "20%"
+  },
+  imageWrapper: {
+    textAlign: "center"
+  },
+  image: {
+    margin: 20,
+    height: 140,
+    width: 140,
+    borderRadius: "50%",
+    objectFit: "cover",
+    dipaly: "inline-block"
+  },
+  profileDetails: {
+    paddingLeft: 20,
+    paddingRight: 15
+  },
+  textInfo: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 10
+    // "& span": {
+    //   marginLeft: 10
+    // }
+  },
+  spanText: {
+    marginLeft: 10,
+    // overflow:"auto",
+    whiteSpace: "normal",
+    wordWrap: "break-word"
+    // overflowWrap: "break-word"
+  }
 };
 
 export default withStyles(styles)(HomeProfile);

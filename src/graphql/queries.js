@@ -20,15 +20,55 @@ export const getUser = `query GetUser($id: ID!) {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -47,8 +87,19 @@ export const getUser = `query GetUser($id: ID!) {
     messages {
       items {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       nextToken
@@ -59,8 +110,19 @@ export const getUser = `query GetUser($id: ID!) {
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -95,15 +157,55 @@ export const getMessage = `query GetMessage($id: ID!) {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -126,6 +228,12 @@ export const getMessage = `query GetMessage($id: ID!) {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }
@@ -149,11 +257,46 @@ export const listMessages = `query ListMessages(
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -175,11 +318,46 @@ export const getComment = `query GetComment($id: ID!) {
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       content
       likes
       comments {
+        items {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       createdAt
@@ -201,8 +379,19 @@ export const listComments = `query ListComments(
       content
       message {
         id
+        user {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
         content
         likes
+        comments {
+          nextToken
+        }
         createdAt
       }
       likes
@@ -216,7 +405,7 @@ export const searchUsers = `query SearchUsers(
   $filter: SearchableUserFilterInput
   $sort: SearchableUserSortInput
   $limit: Int
-  $nextToken: Int
+  $nextToken: String
 ) {
   searchUsers(
     filter: $filter
@@ -236,15 +425,55 @@ export const searchUsers = `query SearchUsers(
         email
         registered
         bio
+        friends {
+          id
+          username
+          email
+          registered
+          bio
+          tags
+        }
+        messages {
+          nextToken
+        }
+        comments {
+          owner
+          id
+          content
+          likes
+          createdAt
+        }
         tags
+        avatar {
+          bucket
+          region
+          key
+        }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       messages {
+        items {
+          id
+          content
+          likes
+          createdAt
+        }
         nextToken
       }
       comments {
         owner
         id
         content
+        message {
+          id
+          content
+          likes
+          createdAt
+        }
         likes
         createdAt
       }

@@ -1,44 +1,62 @@
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia'
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Link from 'react-router-dom/Link'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-
-
-const styles = { 
-  card: {
-    display: 'flex',
-    marginBottom: 20,
-    height: "12%"
-  },
-  image: {
-    minWidth: 100,
-    maxWidth: 150,
-    objectFit: "cover"
-  }, 
-  content: {
-    paddingLeft: 30,
-  }
-}
+import React from "react";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Link from "react-router-dom/Link";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { S3Image } from "aws-amplify-react";
 
 const Message = ({ message, classes }) => {
-  dayjs.extend(relativeTime)
+  dayjs.extend(relativeTime);
+
   return (
     <Card className={classes.card}>
-      <CardMedia image="http://lorempixel.com/400/300/" title="avatar" className={classes.image}></CardMedia>
+      <S3Image
+        theme={{
+          photoImg: {
+            // margin: 20,
+            height: 100,
+            width: 100,
+            // borderRadius: "50%",
+            objectFit: "cover"
+          }
+        }}
+        imgKey={message.user.avatar.key}
+        alt="profile avatar"
+      />
+      {/* <CardMedia image={message.user.avatar} title="avatar" className={classes.image}></CardMedia> */}
       <CardContent className={classes.content}>
         <Typography variant="body1">{message.content}</Typography>
-        <Typography variant="body2" color="textSecondary" >{dayjs(message.createdAt).fromNow()}</Typography>
-        <Typography variant="h6" color="primary" component={Link} to={`/profile/${message.user.id}`}>{message.user.username}</Typography>
+        <Typography variant="body2" color="textSecondary">
+          {dayjs(message.createdAt).fromNow()}
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          component={Link}
+          to={`/profile/${message.user.id}`}
+        >
+          {message.user.username}
+        </Typography>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(Message)
+const styles = {
+  card: {
+    display: "flex",
+    marginBottom: 20,
+    height: 100
+  },
+  content: {
+    paddingLeft: 30
+  }
+};
+
+export default withStyles(styles)(Message);
