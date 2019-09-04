@@ -36,6 +36,10 @@ a {
   color: grey;
 }
 
+.disabled-btn:disabled {
+  color: black;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

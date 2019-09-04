@@ -78,8 +78,8 @@ export default function Gallery({ id, useStyles, imgTheme, remove }) {
     >
       {({ data, loading, errors }) => {
         if (errors.length > 0) return console.log(errors);
-        if (loading || !data.getUser)
-          return <CircularProgress fullscreen={true} />;
+        if (loading || !data.getUser) return <div></div>
+          // return <CircularProgress fullscreen={true} />;
         return (
           <>
           <div style={{textAlign: "center"}}>

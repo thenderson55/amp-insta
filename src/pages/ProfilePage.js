@@ -16,7 +16,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { styled } from '@material-ui/styles';
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -104,7 +104,7 @@ const ProfilePage = ({ id, match }) => {
     setVisitProfile(result.data.getUser);
   };
 
-  const handleAvatarUpload = async imgFile => {
+  const handleAvatarUpload = async () => {
     setIsUploading(true);
     const visibility = "public";
     const { identityId } = await Auth.currentCredentials();
@@ -206,7 +206,7 @@ const ProfilePage = ({ id, match }) => {
     <UserContext.Consumer>
       {({ user }) => (
         <>
-          <Dialog
+          <MyDialog 
             open={openImg}
             onClose={handleCloseImg}
             aria-labelledby="form-dialog-title"
@@ -217,11 +217,12 @@ const ProfilePage = ({ id, match }) => {
               theme={theme}
               preview
               onPick={file => setImage(file)}
-            ></PhotoPicker>
-            <Button disabled={!image} onClick={() => handleAvatarUpload(user)}>
+            >
+            </PhotoPicker>
+            <MyButton disabled={!image} onClick={handleAvatarUpload}>
               Add avatar
-            </Button>
-          </Dialog>
+            </MyButton>
+          </MyDialog>
 
           {/* Render change avatar button is id matches current user */}
           {match.params.id == profile.id && (
@@ -259,23 +260,23 @@ const ProfilePage = ({ id, match }) => {
                 {visitProfile.id == profile.id
                   ? profile.tags &&
                     profile.tags.map((tag, i) => (
-                        <Chip
-                          key={i}
-                          style={{ margin: "2px" }}
-                          label={`${tag}`}
-                          component="a"
-                          variant="outlined"
-                        />
+                      <Chip
+                        key={i}
+                        style={{ margin: "2px" }}
+                        label={`${tag}`}
+                        component="a"
+                        variant="outlined"
+                      />
                     ))
                   : visitProfile.tags &&
                     visitProfile.tags.map((tag, i) => (
-                        <Chip
-                          key={i}
-                          style={{ margin: "2px" }}
-                          label={`${tag}`}
-                          component="a"
-                          variant="outlined"
-                        />
+                      <Chip
+                        key={i}
+                        style={{ margin: "2px" }}
+                        label={`${tag}`}
+                        component="a"
+                        variant="outlined"
+                      />
                     ))}
               </p>
             </>
@@ -360,6 +361,18 @@ const ProfilePage = ({ id, match }) => {
 
 // Styling
 
+
+const MyDialog = styled(Dialog)({
+  border: 0,
+  borderRadius: 3,
+  boxShadow: 0,
+  padding: '0 30px',
+});
+const MyButton = styled(Button)({
+  marginTop: -70,
+  marginBottom: 20,
+});
+
 const imgTheme = {
   photoImg: {
     margin: 20,
@@ -401,32 +414,28 @@ const styles = {
 };
 
 const theme = {
-  // formContainer: {
-  //   margin: 0,
-  //   padding: 0,
-  //   // height: 100,
-  //   // width: 150
-  // },
-  formSection: {
+  formContainer: {
     margin: 0,
     padding: 0,
     boxShadow: "none"
-    // height: 100,
-    // width: 150
   },
-  // sectionBody: {
-  //   height: 100,
-  //   width: 150
-  //   // minWidth: 200,
+  formSection: {
+    boxShadow: "none"
+
+  },
+  // // sectionBody: {
+  // //   height: 100,
+  // //   width: 150
+  // //   // minWidth: 200,
+  // // },
+  // photoPlaceholder: {
+  //   // display: "flex",
+  //   // justifyContent: "center",
+  //   // alignItems: "center",
+  //   // height: 100,
+  //   // width: 150,
+  //   padding: 0
   // },
-  photoPlaceholder: {
-    // display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // height: 100,
-    // width: 150,
-    padding: 0
-  },
   sectionHeader: {
     display: "none"
   },
