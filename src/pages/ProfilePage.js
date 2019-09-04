@@ -104,7 +104,7 @@ const ProfilePage = ({ id, match }) => {
     setVisitProfile(result.data.getUser);
   };
 
-  const handleAvatarUpload = async imgFile => {
+  const handleAvatarUpload = async () => {
     setIsUploading(true);
     const visibility = "public";
     const { identityId } = await Auth.currentCredentials();
@@ -219,7 +219,7 @@ const ProfilePage = ({ id, match }) => {
               onPick={file => setImage(file)}
             >
             </PhotoPicker>
-            <MyButton disabled={!image} onClick={() => handleAvatarUpload(user)}>
+            <MyButton disabled={!image} onClick={handleAvatarUpload}>
               Add avatar
             </MyButton>
           </MyDialog>
