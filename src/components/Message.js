@@ -16,19 +16,21 @@ const Message = ({ message, classes }) => {
 
   return (
     <Card className={classes.card}>
+    <div className={classes.imgWrapper}>
       <S3Image
         theme={{
           photoImg: {
             // margin: 20,
-            height: 100,
-            width: 100,
-            // borderRadius: "50%",
+            height: 70,
+            width: 70,
+            borderRadius: "50%",
             objectFit: "cover"
           }
         }}
         imgKey={message.user.avatar.key}
         alt="profile avatar"
       />
+    </div>
       {/* <CardMedia image={message.user.avatar} title="avatar" className={classes.image}></CardMedia> */}
       <CardContent className={classes.content}>
         <Typography variant="body1">{message.content}</Typography>
@@ -54,8 +56,14 @@ const styles = {
     marginBottom: 20,
     height: 100
   },
+  imgWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingLeft: 20
+  },
   content: {
-    paddingLeft: 30
+    paddingLeft: 20
   }
 };
 
