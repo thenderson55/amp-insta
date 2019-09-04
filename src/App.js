@@ -187,28 +187,28 @@ function App() {
 }
 
 const theme = {
-  ...AmplifyTheme,
-  navBar: {
-    ...AmplifyTheme.navBar,
-    backgroundColor: "#ffc0cb"
-  },
-  button: {
-    ...AmplifyTheme.button,
-    backgroundColor: "var(--amazonOrange)"
-  },
-  formSection: {
-    ...AmplifyTheme.formSection,
-    marginTop: "2rem",
-    backgroundColor: "#fafafa"
-  },
-  sectionHeader: {
-    ...AmplifyTheme.sectionHeader,
-    backgroundColor: "var(--squidInk)"
-  },
-  sectionBody: {
-    ...AmplifyTheme.sectionBody,
-    padding: "5px"
-  }
+  // ...AmplifyTheme,
+  // navBar: {
+  //   ...AmplifyTheme.navBar,
+  //   backgroundColor: "#ffc0cb"
+  // },
+  // button: {
+  //   ...AmplifyTheme.button,
+  //   backgroundColor: "var(--amazonOrange)"
+  // },
+  // formSection: {
+  //   ...AmplifyTheme.formSection,
+  //   marginTop: "2rem",
+  //   backgroundColor: "#fafafa"
+  // },
+  // sectionHeader: {
+  //   ...AmplifyTheme.sectionHeader,
+  //   backgroundColor: "var(--squidInk)"
+  // },
+  // sectionBody: {
+  //   ...AmplifyTheme.sectionBody,
+  //   padding: "5px"
+  // }
 };
 
 export default App;

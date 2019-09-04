@@ -27,8 +27,9 @@ export default function AllMessages() {
       {({ data, loading, errors }) => {
         if (errors.length > 0) return console.log(errors);
         if (loading || !data.listMessages)
-          return <CircularProgress fullscreen={true} />;
-        console.log(data.listMessages.items)
+          return <div></div>
+          // return <CircularProgress fullscreen={true} />;
+        // console.log(data.listMessages.items)
         // Change to Unix, sort then change back to UTC
         const changeToUnix = data.listMessages.items.map(message => {
           const newTime = Math.round(new Date(message.createdAt).getTime()/1000)
