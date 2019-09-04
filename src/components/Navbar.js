@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Link from "react-router-dom/Link";
 
 export default function Navbar({ user, handleSignOut }) {
+
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -18,11 +19,14 @@ export default function Navbar({ user, handleSignOut }) {
             <Button color="inherit" component={Link} to="/">
               Home
             </Button>
+            <Button color="inherit" component={Link} to={`/gallery/${user.attributes.sub}`}>
+              Gallery
+            </Button>
+            {/* <span style={{fontSize: "0.9em", margin: 20}} color="inherit" disabled>Logged in as: {user.username}</span> */}
           </Grid>
           <Grid item>
           </Grid>
           <Grid item style={{display: "flex"}}>
-            <Button color="inherit">Logged in as: {user.username}</Button>
             <Button color="inherit" onClick={handleSignOut}>
               Log Out
             </Button>
